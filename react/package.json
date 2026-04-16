@@ -52,12 +52,10 @@
     "prepublishOnly": "npm run build && npm run typecheck"
   },
   "peerDependencies": {
-    "@efficimo/observable": ">=0.1.0",
     "@efficimo/storage": ">=0.1.0",
     "react": ">=18.0.0"
   },
   "devDependencies": {
-    "@efficimo/observable": "*",
     "@efficimo/storage": "file:../core",
     "@types/node": "^25.0.0",
     "@types/react": "^18.0.0",

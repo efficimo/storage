@@ -52,11 +52,10 @@
     "test": "tsc -p tsconfig.test.json && node --test .test-out/test/*.test.js",
     "prepublishOnly": "npm run build && npm run typecheck"
   },
-  "peerDependencies": {
-    "@efficimo/observable": ">=0.1.0"
+  "dependencies": {
+    "@efficimo/observable": "^0.2.0"
   },
   "devDependencies": {
-    "@efficimo/observable": "*",
     "@types/node": "^25.0.0",
     "typescript": "^5.0.0"
   }
