@@ -7,7 +7,7 @@
 
 > Subscribe to browser storage. Typed keys, reactive updates, cross-tab sync — no boilerplate.
 
-Built on [`@efficimo/observable`](https://www.npmjs.com/package/@efficimo/observable). Zero additional dependencies.
+Built on [`@efficimo/observable`](https://www.npmjs.com/package/@efficimo/observable).
 
 ## Packages
 
@@ -20,10 +20,10 @@ Built on [`@efficimo/observable`](https://www.npmjs.com/package/@efficimo/observ
 
 ```bash
 # core only
-npm install @efficimo/observable @efficimo/storage
+npm install @efficimo/storage
 
 # with React hook
-npm install @efficimo/observable @efficimo/storage @efficimo/storage-react
+npm install @efficimo/storage @efficimo/storage-react
 ```
 
 ## Quick start
