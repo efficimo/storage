@@ -1,8 +1,9 @@
 import { JsonSerializeObservableValue, type SafeParseSchema } from "@efficimo/observable";
 import { StorageObservable } from "./StorageObservable";
+import type { Store } from "./Store";
 
-const createObservable = <StorageKey extends string>(
-  storage: Storage,
+const createObservable = <StorageKey extends string, Options>(
+  storage: Store<StorageKey, Options>,
   key: StorageKey,
   initialValue?: string | null,
 ): StorageObservable<StorageKey> => {
@@ -15,31 +16,28 @@ const createObservable = <StorageKey extends string>(
   return obs;
 };
 
-export class BaseStorage<StorageKey extends string> {
-  #storage: Storage;
+export class BaseStorage<StorageKey extends string, Options = never> {
+  #storage: Store<StorageKey, Options>;
   #observables: {
     [key in StorageKey]?: StorageObservable<StorageKey>;
   };
 
-  public constructor(storage: Storage) {
+  public constructor(storage: Store<StorageKey, Options>) {
     this.#observables = {};
     this.#storage = storage;
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("storage", (event) => {
-        if (event.storageArea === this.#storage) {
-          if (null === event.key) {
-            for (const observable of Object.values(this.#observables)) {
-              (observable as StorageObservable<StorageKey>).next(null);
-            }
-            this.#observables = {};
-          } else {
-            const observable = this.#observables[event.key as StorageKey];
-            observable?.next(event.newValue);
-          }
+    storage.onExternalChange?.((key, value) => {
+      if (key === null) {
+        for (const observable of Object.values(this.#observables)) {
+          (observable as StorageObservable<StorageKey>).next(null);
         }
-      });
-    }
+        this.#observables = {};
+      } else {
+        this.#observables[key as StorageKey]?.next(value);
+      }
+    });
+
+    storage.init();
   }
 
   public getObservable<StorageKeyParam extends StorageKey>(
@@ -80,13 +78,7 @@ export class BaseStorage<StorageKey extends string> {
   }
 
   public has<StorageKeyParam extends StorageKey>(storageKey: StorageKeyParam): boolean {
-    for (let i = 0; i < this.#storage.length; i++) {
-      if (this.#storage.key(i) === storageKey) {
-        return true;
-      }
-    }
-
-    return false;
+    return this.#storage.has(storageKey);
   }
 
   public remove<StorageKeyParam extends StorageKey>(storageKey: StorageKeyParam): void {

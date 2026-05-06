@@ -5,15 +5,16 @@ import {
   type SetFunction,
   type Subscriber,
 } from "@efficimo/observable";
+import type { Store } from "./Store";
 
 export class StorageObservable<StorageKey extends string>
   extends Observable<string | null>
   implements ObservableValueInterface<string | null>
 {
   private key: StorageKey;
-  private storage: Storage;
+  private storage: Store<StorageKey, unknown>;
 
-  constructor(key: StorageKey, storage: Storage) {
+  constructor(key: StorageKey, storage: Store<StorageKey, unknown>) {
     super();
     this.key = key;
     this.storage = storage;
@@ -24,9 +25,9 @@ export class StorageObservable<StorageKey extends string>
     return super.subscribe(subscriber);
   };
 
-  next = async (value: string | null | SetFunction<string | null>) => {
+  next = (value: string | null | SetFunction<string | null>): void => {
     const prevValue = this.storage.getItem(this.key);
-    const newValue = isSetFunction(value) ? await value(prevValue) : value;
+    const newValue = isSetFunction(value) ? value(prevValue) : value;
 
     if (prevValue === newValue) {
       return;

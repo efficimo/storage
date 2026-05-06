@@ -53,7 +53,7 @@
     "prepublishOnly": "npm run build && npm run typecheck"
   },
   "dependencies": {
-    "@efficimo/observable": "^0.2.0"
+    "@efficimo/observable": "^0.3.0"
   },
   "devDependencies": {
     "@types/node": "^25.0.0",

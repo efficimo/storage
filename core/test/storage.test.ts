@@ -2,33 +2,32 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { BaseStorage } from "../src/BaseStorage";
 import { StorageObservable } from "../src/StorageObservable";
+import type { Store } from "../src/Store";
 
-class MockStorage implements Storage {
+class MockStorage implements Store {
   private data: Record<string, string> = {};
-
-  get length() {
-    return Object.keys(this.data).length;
-  }
-
-  clear() {
-    this.data = {};
-  }
 
   getItem(key: string): string | null {
     return Object.hasOwn(this.data, key) ? this.data[key] : null;
   }
 
-  key(index: number): string | null {
-    return Object.keys(this.data)[index] ?? null;
+  setItem(key: string, value: string): void {
+    this.data[key] = value;
   }
 
   removeItem(key: string): void {
     delete this.data[key];
   }
 
-  setItem(key: string, value: string): void {
-    this.data[key] = value;
+  has(key: string): boolean {
+    return Object.hasOwn(this.data, key);
   }
+
+  clear(): void {
+    this.data = {};
+  }
+
+  init(): void {}
 }
 
 describe("StorageObservable", () => {
