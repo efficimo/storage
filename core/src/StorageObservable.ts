@@ -5,7 +5,7 @@ import {
   type SetFunction,
   type Subscriber,
 } from "@efficimo/observable";
-import type { Store } from "./Store";
+import type { Store } from "./Store.ts";
 
 export class StorageObservable<StorageKey extends string>
   extends Observable<string | null>

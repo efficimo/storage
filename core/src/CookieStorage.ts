@@ -1,6 +1,6 @@
-import { BaseStorage } from "./BaseStorage";
-import { type CookieOptions, CookieStorageAdapter } from "./CookieStorageAdapter";
-import type { DefaultCookieStorageKeys } from "./DefaultCookieStorageKeys";
+import { BaseStorage } from "./BaseStorage.ts";
+import { type CookieOptions, CookieStorageAdapter } from "./CookieStorageAdapter.ts";
+import type { DefaultCookieStorageKeys } from "./DefaultCookieStorageKeys.ts";
 
 export type { CookieOptions };
 

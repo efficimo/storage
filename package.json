@@ -7,10 +7,10 @@
     "react"
   ],
   "scripts": {
-    "check": "biome ci .",
-    "check:write": "biome check --write ."
+    "lint": "biome ci .",
+    "format": "biome check --write ."
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12"
+    "@biomejs/biome": "^2.5.14"
   }
 }

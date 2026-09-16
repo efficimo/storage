@@ -18,21 +18,24 @@ Built on [`@efficimo/observable`](https://www.npmjs.com/package/@efficimo/observ
 
 ## Installation
 
+`@efficimo/observable` is a **peer dependency** — it must resolve to a single instance shared
+with the rest of your app, so install it explicitly:
+
 ```bash
 # core only
-npm install @efficimo/storage
+npm install @efficimo/storage @efficimo/observable
 
 # with React hook
-npm install @efficimo/storage @efficimo/storage-react
+npm install @efficimo/storage @efficimo/storage-react @efficimo/observable
 ```
 
 ## Quick start
 
 ```typescript
-import { BaseStorage } from '@efficimo/storage';
+import { BaseStorage, NativeStorageAdapter } from '@efficimo/storage';
 
 type Keys = 'auth.token' | 'user.theme';
-const store = new BaseStorage<Keys>(localStorage);
+const store = new BaseStorage<Keys>(new NativeStorageAdapter(localStorage));
 
 // reactive subscription
 store.getObservable('auth.token').subscribe(token => {
@@ -90,9 +93,40 @@ const prefs = LocalStorage.getSerializedObservable('user.prefs', schema, { theme
 
 prefs.subscribe(v => console.log(v)); // { theme: 'light', lang: 'en' }
 
-await prefs.next({ theme: 'dark', lang: 'fr' });
+prefs.next({ theme: 'dark', lang: 'fr' });
 // localStorage now holds '{"theme":"dark","lang":"fr"}'
 ```
+
+## Cookies
+
+`CookieStorage` is a singleton backed by `CookieStorageAdapter`, which uses the
+[Cookie Store API](https://developer.mozilla.org/en-US/docs/Web/API/CookieStore).
+Keys are typed through the `DefaultCookieStorageKeys` interface, like the other singletons:
+
+```typescript
+import { CookieStorage } from '@efficimo/storage';
+
+declare module '@efficimo/storage' {
+  interface DefaultCookieStorageKeys {
+    'consent.analytics': true;
+  }
+}
+
+CookieStorage.getObservable('consent.analytics').subscribe(v => console.log(v));
+CookieStorage.set('consent.analytics', 'granted');
+```
+
+Use `CookieStorageAdapter` directly to set cookie attributes (`path`, `domain`, `maxAge`, `sameSite`):
+
+```typescript
+import { BaseStorage, CookieStorageAdapter } from '@efficimo/storage';
+
+const cookies = new BaseStorage(
+  new CookieStorageAdapter({ path: '/', sameSite: 'lax', maxAge: 60 * 60 * 24 * 365 }),
+);
+```
+
+External cookie changes are picked up through `cookieStore.onchange` when the browser supports it.
 
 ## Cross-tab sync
 
@@ -120,7 +154,7 @@ Implements `ObservableValueInterface<string | null>` from `@efficimo/observable`
 |---|---|
 | `getValue()` | Returns the current storage value. |
 | `subscribe(fn)` | Registers subscriber and immediately calls it with the current value. |
-| `next(value \| setter)` | Updates the value. Supports async setter `(prev) => newValue`. No-op if unchanged. |
+| `next(value \| setter)` | Updates the value. Supports a setter function `(prev) => newValue`. No-op if unchanged. |
 
 ---
 

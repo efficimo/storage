@@ -1,6 +1,6 @@
-import { BaseStorage } from "./BaseStorage";
-import type { DefaultSessionStorageKeys } from "./DefaultSessionStorageKeys";
-import { NativeStorageAdapter } from "./NativeStorageAdapter";
+import { BaseStorage } from "./BaseStorage.ts";
+import type { DefaultSessionStorageKeys } from "./DefaultSessionStorageKeys.ts";
+import { NativeStorageAdapter } from "./NativeStorageAdapter.ts";
 
 class _SessionStorage extends BaseStorage<keyof DefaultSessionStorageKeys & string> {
   static _instance: _SessionStorage | null = null;

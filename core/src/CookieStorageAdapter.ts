@@ -1,4 +1,4 @@
-import type { Store } from "./Store";
+import type { Store } from "./Store.ts";
 
 export interface CookieOptions {
   path?: string;

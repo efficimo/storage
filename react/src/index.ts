@@ -1,2 +1,2 @@
-export * from "./useStorageObservable";
-export * from "./useStorageSerializedObservable";
+export * from "./useStorageObservable.ts";
+export * from "./useStorageSerializedObservable.ts";

@@ -1,6 +1,6 @@
 import { JsonSerializeObservableValue, type SafeParseSchema } from "@efficimo/observable";
-import { StorageObservable } from "./StorageObservable";
-import type { Store } from "./Store";
+import { StorageObservable } from "./StorageObservable.ts";
+import type { Store } from "./Store.ts";
 
 const createObservable = <StorageKey extends string, Options>(
   storage: Store<StorageKey, Options>,

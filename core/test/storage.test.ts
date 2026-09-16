@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { BaseStorage } from "../src/BaseStorage";
-import { StorageObservable } from "../src/StorageObservable";
-import type { Store } from "../src/Store";
+import { BaseStorage } from "../src/BaseStorage.ts";
+import { StorageObservable } from "../src/StorageObservable.ts";
+import type { Store } from "../src/Store.ts";
 
 class MockStorage implements Store {
   private data: Record<string, string> = {};
@@ -47,45 +47,45 @@ describe("StorageObservable", () => {
     assert.deepEqual(values, ["bar"]);
   });
 
-  it("sets and emits new value", async () => {
+  it("sets and emits new value", () => {
     const mock = new MockStorage();
     const obs = new StorageObservable("foo", mock);
 
     const values: (string | null)[] = [];
     obs.subscribe((v) => values.push(v));
 
-    await obs.next("hello");
+    obs.next("hello");
     assert.deepEqual(values, [null, "hello"]);
     assert.equal(mock.getItem("foo"), "hello");
   });
 
-  it("removes item when set to null", async () => {
+  it("removes item when set to null", () => {
     const mock = new MockStorage();
     mock.setItem("foo", "bar");
     const obs = new StorageObservable("foo", mock);
 
-    await obs.next(null);
+    obs.next(null);
     assert.equal(mock.getItem("foo"), null);
   });
 
-  it("skips notification when value is unchanged", async () => {
+  it("skips notification when value is unchanged", () => {
     const mock = new MockStorage();
     mock.setItem("foo", "bar");
     const obs = new StorageObservable("foo", mock);
 
     const values: (string | null)[] = [];
     obs.subscribe((v) => values.push(v));
-    await obs.next("bar");
+    obs.next("bar");
 
     assert.deepEqual(values, ["bar"]);
   });
 
-  it("supports setter function", async () => {
+  it("supports setter function", () => {
     const mock = new MockStorage();
     mock.setItem("count", "2");
     const obs = new StorageObservable("count", mock);
 
-    await obs.next((prev) => String(Number(prev ?? "0") + 1));
+    obs.next((prev) => String(Number(prev ?? "0") + 1));
     assert.equal(mock.getItem("count"), "3");
   });
 });
@@ -125,12 +125,11 @@ describe("BaseStorage", () => {
     assert.equal(store.has("x"), true);
   });
 
-  it("remove sets value to null", async () => {
+  it("remove sets value to null", () => {
     const mock = new MockStorage();
     const store = new BaseStorage(mock);
     store.set("x", "1");
     store.remove("x");
-    await new Promise((r) => setTimeout(r, 0));
     assert.equal(store.get("x"), null);
   });
 
@@ -144,7 +143,7 @@ describe("BaseStorage", () => {
     assert.equal(store.get("b"), null);
   });
 
-  it("getSerializedObservable parses JSON with schema", async () => {
+  it("getSerializedObservable parses JSON with schema", () => {
     const mock = new MockStorage();
     const store = new BaseStorage(mock);
 
@@ -159,7 +158,7 @@ describe("BaseStorage", () => {
     const obs = store.getSerializedObservable("count", schema, 0);
     assert.equal(obs.getValue(), 0);
 
-    await obs.next(42);
+    obs.next(42);
     assert.equal(mock.getItem("count"), "42");
     assert.equal(obs.getValue(), 42);
   });

@@ -1,6 +1,6 @@
-import { BaseStorage } from "./BaseStorage";
-import type { DefaultLocalStorageKeys } from "./DefaultLocalStorageKeys";
-import { NativeStorageAdapter } from "./NativeStorageAdapter";
+import { BaseStorage } from "./BaseStorage.ts";
+import type { DefaultLocalStorageKeys } from "./DefaultLocalStorageKeys.ts";
+import { NativeStorageAdapter } from "./NativeStorageAdapter.ts";
 
 class _LocalStorage extends BaseStorage<keyof DefaultLocalStorageKeys & string> {
   static _instance: _LocalStorage | null = null;
